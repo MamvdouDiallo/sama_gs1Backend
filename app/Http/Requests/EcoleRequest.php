@@ -23,7 +23,7 @@ class EcoleRequest extends FormRequest
     {
         return [
             "libelle" => "required|string|min:2",
-            "date_creation" => "required|dateTime",
+            "date_creation" => "required|date",
             "type_ecole" => "required|string",
             "adresse" => "required|string|min:4",
         ];

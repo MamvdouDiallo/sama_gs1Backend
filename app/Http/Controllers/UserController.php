@@ -2,38 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Traits\HttpResp;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class RoleController extends Controller
+class UserController extends Controller
 {
     use HttpResp;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $roles = Role::all();
-        return $this->success(200, "liste des roles", $roles);
+        return $this->success(200, "liste des users", UserResource::collection(User::all()));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-
-        $validator = Validator::make($request->all(), [
-            'libelle' => 'string|required|unique:roles|min:3',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
-        $libelle = ucfirst(strtolower($request->libelle));
-        $classe = Role::create(['libelle' => $libelle,]);
-        return $this->success(200, '', $classe);
+        $user = User::create($request->all());
+        return $this->success(200, "user crée avec succés",  $user);
     }
 
     /**

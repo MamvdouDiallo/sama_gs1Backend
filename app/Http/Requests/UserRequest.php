@@ -27,8 +27,9 @@ class UserRequest extends FormRequest
             "email" => "required|email|unique:users",
             "photo" => "string",
             "telephone" => 'required|unique:users|regex:/^7[5678]\d{7}$/',
+            "password" => 'required|string',
             "role_id" => 'required|integer|exists:roles,id',
-            "user_id" => 'required|integer|exists:users,id'
+            "ecole_id" => 'required|integer|exists:ecoles,id'
         ];
     }
 }
