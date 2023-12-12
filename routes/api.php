@@ -25,11 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('users/modifier', [UserController::class, 'modifier']);
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('ecoles', EcoleController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('students', StudentController::class);
-
 
 
 Route::post('users/login', [AuthController::class, 'login']);

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Mail\SendMail;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +31,15 @@ class PasswordResetRequestController extends Controller
     }
     public function sendMail($email)
     {
-        $token = $this->generateToken($email);
-        Mail::to($email)->send(new SendMail($token));
+
+        DB::beginTransaction();
+        try {
+            $token = $this->generateToken($email);
+            Mail::to($email)->send(new SendMail($token));
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
     }
     public function validEmail($email)
     {

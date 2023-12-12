@@ -19,14 +19,20 @@ class UserRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+   
+   
+   
+     public function rules(): array
     {
         return [
             "nom" => "required|string|min:2",
             "prenom" => "required|string|min:2",
             "email" => "required|email|unique:users",
             "photo" => "string",
-            "telephone" => 'required|unique:users|regex:/^7[5678]\d{7}$/',
+            'telephone' => ['required', 'unique:users', 'regex:/^(?:\+221)?(?:77|78|70|75)\d{7}$/'],
+            'telephone_bureau' => ['required', 'unique:users', 'regex:/^(?:\+221)?(?:77|78|70|75|33)\d{7}$/'],
+            "adresse" => 'required|string',
+            "civilite" => 'required|string|min:2',
             "password" => 'required|string',
             "role_id" => 'required|integer|exists:roles,id',
             "ecole_id" => 'required|integer|exists:ecoles,id'

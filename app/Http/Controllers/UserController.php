@@ -7,6 +7,8 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\HttpResp;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -29,6 +31,7 @@ class UserController extends Controller
         return $this->success(200, "user crée avec succés",  $user);
     }
 
+
     /**
      * Display the specified resource.
      */
@@ -42,7 +45,34 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $image_64 = $request->photo;
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+        $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+        $image = str_replace($replace, '', $image_64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = time() . '.' . $extension;
+        Storage::disk('public')->put($imageName, base64_decode($image));
+        return $imageName;
+    }
+    public function modifier(Request $request)
+    {
+        User::where('id', $request->id_system)->update([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'civilite' => $request->civilite,
+            'telephone' => $request->telephone,
+            'telephone_bureau' => $request->telephone_bureau,
+            'adresse' => $request->adresse,
+            'photo' => $this->uploadImage($request)
+        ]);
+        return response()->json([
+            'message' => 'modifie avec succés',
+            'code' => 200
+        ], Response::HTTP_OK);
     }
 
     /**
