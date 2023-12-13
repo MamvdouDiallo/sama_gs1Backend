@@ -69,9 +69,13 @@ class UserController extends Controller
             'adresse' => $request->adresse,
             'photo' => $this->uploadImage($request)
         ]);
+
+        $user1 = User::where('id', $request->id_system)->first();
+
         return response()->json([
-            'message' => 'modifie avec succés',
-            'code' => 200
+            'message' => 'modifié avec succès',
+            'code' => 200,
+            'data' => new UserResource($user1)
         ], Response::HTTP_OK);
     }
 
