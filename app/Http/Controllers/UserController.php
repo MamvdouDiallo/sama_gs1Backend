@@ -49,14 +49,18 @@ class UserController extends Controller
 
     public function uploadImage(Request $request)
     {
-        $image_64 = $request->photo;
-        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
-        $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
-        $image = str_replace($replace, '', $image_64);
-        $image = str_replace(' ', '+', $image);
-        $imageName = time() . '.' . $extension;
-        Storage::disk('public')->put($imageName, base64_decode($image));
-        return $imageName;
+        if ($request->has('photo') && !empty($request->photo)) {
+            $image_64 = $request->photo;
+            $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+            $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+            $image = str_replace($replace, '', $image_64);
+            $image = str_replace(' ', '+', $image);
+            $imageName = time() . '.' . $extension;
+            Storage::disk('public')->put($imageName, base64_decode($image));
+            return $imageName;
+        } else {
+            return $imageName = "";
+        }
     }
     public function modifier(Request $request)
     {

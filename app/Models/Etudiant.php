@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Ecole extends Model
+class Etudiant extends Model
 {
-    use HasFactory;
     protected $guarded = ['id'];
+    use HasFactory;
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function niveaux(): BelongsToMany
+    public function ecoles(): BelongsToMany
     {
-        return $this->belongsToMany(Niveau::class, 'niveau_ecole', 'ecole_id', 'niveau_id');
+        return $this->belongsToMany(Ecole::class, 'etudiant_ecoles', 'etudiant_id', 'ecole_id');
     }
 }
