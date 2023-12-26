@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('civilite')->nullable(false);
-         //   $table->string('telephone_bureau')->nullable(false);
-            $table->string('adresse')->nullable(false);
+            $table->string('photo')->default('1702645746.jpeg')->change();
         });
     }
 
@@ -24,7 +22,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+
+            $table->string('photo')->change();
         });
     }
 };

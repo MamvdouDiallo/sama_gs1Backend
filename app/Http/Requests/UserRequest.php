@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
             "email" => "required|email|unique:users",
             "photo" => "string",
             'telephone' => ['required', 'unique:users', 'regex:/^(?:\+221)?(?:77|78|70|75)\d{7}$/'],
-            'telephone_bureau' => ['required', 'unique:users', 'regex:/^(?:\+221)?(?:77|78|70|75|33)\d{7}$/'],
+           // 'telephone_bureau' => ['required', 'unique:users', 'regex:/^(?:\+221)?(?:77|78|70|75|33)\d{7}$/'],
             "adresse" => 'required|string',
             "civilite" => 'required|string|min:2',
             "password" => 'required|string',

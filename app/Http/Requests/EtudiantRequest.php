@@ -27,9 +27,12 @@ class EtudiantRequest extends FormRequest
             "departement" => "required|string|min:1",
             "ecole_id" => "required|integer|exists:ecoles,id",
             "photo" => "required|string",
-            "num_gtin" => "required|string",
+            "numero_gtin" => "required|string|min:8|unique:etudiants",
+            "date_obtention" => "required",
+            "matricule" => "required|string|min:3",
             "niveau_id" => "required|integer|exists:niveaux,id",
-            "filiere_id" => "required|integer|exists:filieres,id"
+            "filiere_id" => "required|integer|exists:filieres,id",
+            "photo_diplome" => "required|string"
         ];
     }
 }

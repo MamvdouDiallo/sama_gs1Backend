@@ -20,44 +20,61 @@ class StudentController extends Controller
     {
         //
     }
+    public function uploadImage(Request $request)
+    {
+        // if ($request->has('photo') && !empty($request->photo)) {
+        //     $image_64 = $request->photo;
+        //     $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+        //     $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+        //     $image = str_replace($replace, '', $image_64);
+        //     $image = str_replace(' ', '+', $image);
+        //     $imageName = time() . '.' . $extension;
+        //     Storage::disk('public')->put($imageName, base64_decode($image));
+        //     return $imageName;
+        // } else {
+        //     return $imageName = "";
+        // }
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StudentRequest $request)
     {
-        try {
-            $image_64 = $request->photo;
-            $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
-            $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
-            $image = str_replace($replace, '', $image_64);
-            $image = str_replace(' ', '+', $image);
-            $imageName = time() . '.' . $extension;
-            Storage::disk('public')->put($imageName, base64_decode($image));
+        // try {
+        //     $image_64 = $request->photo;
+        //     $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+        //     $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+        //     $image = str_replace($replace, '', $image_64);
+        //     $image = str_replace(' ', '+', $image);
+        //     $imageName = time() . '.' . $extension;
+        //     Storage::disk('public')->put($imageName, base64_decode($image));
 
             
-            $image64 = $request->photo_diplome;
-            $extension1 = explode('/', explode(':', substr($image64, 0, strpos($image64, ';')))[1])[1];
-            $replace1 = substr($image64, 0, strpos($image64, ',') + 1);
-            $image1 = str_replace($replace1, '', $image64);
-            $image1 = str_replace(' ', '+', $image1);
-            $imageName1 = 'diplome' . time() . '.' . $extension1;
-            Storage::disk('public')->put($imageName1, base64_decode($image1));
-            $student =  Student::create([
-                'nom' => $request->nom,
-                'prenoms' => $request->prenom,
-                'civilite' => $request->civilite,
-                'departement' => $request->departement,
-                'ecole' => $request->ecole,
-                'numero_gtin' => $request->num_gtin,
-                'id_system' => $request->id_system,
-                'photo' => $imageName,
-                'photo_diplome' => $imageName1
-            ]);
-            return $this->success(200, 'created succesfully', $student);
-        } catch (\Exception $th) {
-            throw new Error($th->getMessage());
-        }
+        //     $image64 = $request->photo_diplome;
+        //     $extension1 = explode('/', explode(':', substr($image64, 0, strpos($image64, ';')))[1])[1];
+        //     $replace1 = substr($image64, 0, strpos($image64, ',') + 1);
+        //     $image1 = str_replace($replace1, '', $image64);
+        //     $image1 = str_replace(' ', '+', $image1);
+        //     $imageName1 = 'diplome' . time() . '.' . $extension1;
+        //     Storage::disk('public')->put($imageName1, base64_decode($image1));
+        //     $student =  Student::create([
+        //         'nom' => $request->nom,
+        //         'prenoms' => $request->prenom,
+        //         'civilite' => $request->civilite,
+        //         'departement' => $request->departement,
+        //         'ecole' => $request->ecole,
+        //         'numero_gtin' => $request->num_gtin,
+        //         'id_system' => $request->id_system,
+        //         'photo' => $imageName,
+        //         'photo_diplome' => $imageName1
+        //     ]);
+        //     return $this->success(200, 'created succesfully', $student);
+        // } catch (\Exception $th) {
+        //     throw new Error($th->getMessage());
+        // }
     }
 
     /**
@@ -75,6 +92,24 @@ class StudentController extends Controller
     {
         //
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    public function modifier(Request $request)
+    {
+    
+    }
+
 
     /**
      * Remove the specified resource from storage.

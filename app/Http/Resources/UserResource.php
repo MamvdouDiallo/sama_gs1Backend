@@ -33,10 +33,10 @@ class UserResource extends JsonResource
             "email" => $this->email,
             "telephone" => $this->telephone,
             "photo" => $this->getImage($this->photo),
-            "telephone_bureau" => $this->telephone_bureau,
+            // "telephone_bureau" => $this->telephone_bureau,
             "adresse" => $this->adresse,
             "role" => $this->role->libelle,
-            "ecole" => $this->ecole->libelle,
+            "ecole" => new EcoleResource($this->ecole),
             "ecole_id" => $this->ecole->id
         ];
     }

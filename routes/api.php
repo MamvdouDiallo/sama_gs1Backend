@@ -30,8 +30,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('niveaux/ecole/{id}', [NiveauController::class, 'niveauByEcole']);
 Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
+Route::post('etudiants/ecole/etudiantsByGTIN', [EtudiantController::class, 'elevesEcoleByGtin']);
+
+Route::post('etudiants/update', [EtudiantController::class, 'modifier']);
+
+Route::delete('etudiants/supprimer/{id}', [EtudiantController::class, 'supprimer']);
+
+Route::post('ecole/isExist', [EtudiantController::class, 'IsExistGtin']);
+
 Route::get('filieres/ecole/{id}', [FiliereController::class, 'filiereByEcole']);
+Route::get('suggestions', [EtudiantController::class, 'detDepartment']);
+
 Route::post('users/modifier', [UserController::class, 'modifier']);
+Route::post('ecoles/modifier', [UserController::class, 'modifierEcole']);
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('ecoles', EcoleController::class);
 Route::apiResource('users', UserController::class);
@@ -44,3 +55,8 @@ Route::post('users/logout', [AuthController::class, 'logout']);
 
 Route::post('reset_password_request', [PasswordResetRequestController::class, 'sendPasswordResetEmail']);
 Route::post('change_password', [ChangePasswordController::class, 'passwordReset']);
+
+// Route::group(['middleware' => 'auth:sanctum'],function(){
+//     Route::apiResource('ecoles', EcoleController::class);
+//     Route::apiResource('etudiants', EtudiantController::class);
+// });
