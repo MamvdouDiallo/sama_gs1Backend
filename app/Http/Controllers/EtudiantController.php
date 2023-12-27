@@ -98,6 +98,11 @@ class EtudiantController extends Controller
     }
 
 
+
+
+
+
+
     public function uploadImage(Request $request, $photoKey)
     {
         if ($request->has($photoKey) && !empty($request->$photoKey)) {
@@ -113,15 +118,31 @@ class EtudiantController extends Controller
             return $imageName = "";
         }
     }
-
-
-
-
     public function modifier(Request $request)
     {
 
         $filiere = Filiere::where('libelle', $request->filiere)->first();
         $niveau = Niveau::where('libelle', $request->niveau)->first();
+
+
+
+        $image_64 = $request->photo;
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+        $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+        $image = str_replace($replace, '', $image_64);
+        $image = str_replace(' ', '+', $image);
+        $imageName = time() . '.' . $extension;
+        Storage::disk('public')->put($imageName, base64_decode($image));
+
+
+        $image64 = $request->photo_diplome;
+        $extension1 = explode('/', explode(':', substr($image64, 0, strpos($image64, ';')))[1])[1];
+        $replace1 = substr($image64, 0, strpos($image64, ',') + 1);
+        $image1 = str_replace($replace1, '', $image64);
+        $image1 = str_replace(' ', '+', $image1);
+        $imageName1 = 'diplome' . time() . '.' . $extension1;
+        Storage::disk('public')->put($imageName1, base64_decode($image1));
+
 
         Etudiant::where('id', $request->id)->update([
             'nom' => $request->nom,
@@ -132,8 +153,8 @@ class EtudiantController extends Controller
             'matricule' => $request->matricule,
             'date_obtention' => $request->date_obtention,
             'filiere_id' => $filiere->id,
-            'photo' => $this->uploadImage($request, 'photo'),
-            'photo_diplome' => $this->uploadImage($request, 'photo_diplome'),
+            'photo' => $imageName,
+            'photo_diplome' => $imageName1,
             'date_obtention' => $request->date_obtention
         ]);
         $user1 = EtudiantEcole::where('etudiant_id', $request->id)->with('etudiant')->first();
