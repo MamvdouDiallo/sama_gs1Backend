@@ -29,29 +29,29 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('niveaux/ecole/{id}', [NiveauController::class, 'niveauByEcole']);
-Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
-Route::post('etudiants/ecole/etudiantsByGTIN', [EtudiantController::class, 'elevesEcoleByGtin']);
+//Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
 
-Route::post('etudiants/update', [EtudiantController::class, 'modifier']);
-
-Route::delete('etudiants/supprimer/{id}', [EtudiantController::class, 'supprimer']);
 
 Route::post('ecole/isExist', [EtudiantController::class, 'IsExistGtin']);
 
 Route::get('filieres/ecole/{id}', [FiliereController::class, 'filiereByEcole']);
+
 Route::get('suggestions', [EtudiantController::class, 'detDepartment']);
+
+Route::get('suggestionFilieres', [EtudiantController::class, 'detFiliere']);
+
+Route::get('suggestionNiveaux', [EtudiantController::class, 'detNiveau']);
+
 
 Route::post('users/modifier', [UserController::class, 'modifier']);
 Route::post('ecoles/modifier', [UserController::class, 'modifierEcole']);
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('ecoles', EcoleController::class);
 Route::apiResource('users', UserController::class);
-Route::apiResource('etudiants', EtudiantController::class);
 Route::apiResource('niveaux', NiveauController::class);
 Route::apiResource('filieres', FiliereController::class);
 
 Route::post('users/login', [AuthController::class, 'login']);
-Route::post('users/logout', [AuthController::class, 'logout']);
 
 Route::post('reset_password_request', [PasswordResetRequestController::class, 'sendPasswordResetEmail']);
 Route::post('change_password', [ChangePasswordController::class, 'passwordReset']);
@@ -60,3 +60,13 @@ Route::post('change_password', [ChangePasswordController::class, 'passwordReset'
 //     Route::apiResource('ecoles', EcoleController::class);
 //     Route::apiResource('etudiants', EtudiantController::class);
 // });
+
+
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::apiResource('etudiants', EtudiantController::class);
+    Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
+    Route::post('etudiants/ecole/etudiantsByGTIN', [EtudiantController::class, 'elevesEcoleByGtin']);
+    Route::post('etudiants/update', [EtudiantController::class, 'modifier']);
+    Route::post('users/logout', [AuthController::class, 'logout']);
+    Route::delete('etudiants/supprimer/{id}', [EtudiantController::class, 'supprimer']);
+});

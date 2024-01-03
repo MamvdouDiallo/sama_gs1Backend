@@ -30,8 +30,8 @@ class EtudiantRequest extends FormRequest
             "numero_gtin" => "required|string|min:8|unique:etudiants",
             "date_obtention" => "required",
             "matricule" => "required|string|min:3",
-            "niveau_id" => "required|integer|exists:niveaux,id",
-            "filiere_id" => "required|integer|exists:filieres,id",
+            "niveau" => "required",
+            "filiere" => "required",
             "photo_diplome" => "required|string"
         ];
     }

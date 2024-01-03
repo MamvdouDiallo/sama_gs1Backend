@@ -27,12 +27,12 @@ class EtudiantController extends Controller
     public function index(Request $request)
     {
 
-        // if ($request->user()->cannot('viewAny', Etudiant::class)) {
-        //     return response()->json([
-        //         "message" => "Tu n'est pas autorisé a effectué cette action",
-        //         "code"=>404
-        //     ]);
-        // }
+        if ($request->user()->cannot('viewAny', Etudiant::class)) {
+            return response()->json([
+                "message" => "Tu n'est pas autorisé a effectué cette action",
+                "code" => 404
+            ]);
+        }
 
         return response()->json([
             'code' => 200,
@@ -42,8 +42,14 @@ class EtudiantController extends Controller
     }
 
 
-    public function elevesByEcole($id)
+    public function elevesByEcole(Request $request, $id)
     {
+        if ($request->user()->cannot('viewEtudiantByEcole', Etudiant::class)) {
+            return response()->json([
+                "message" => "Tu n'est pas autorisé à voir cette liste",
+                "code" => 404
+            ]);
+        }
         $eleves = EtudiantEcole::where('ecole_id', $id)->with('etudiant')->get();
         return response()->json([
             "code" => 200,
@@ -51,7 +57,6 @@ class EtudiantController extends Controller
             'data' => EtudiantResource::collection($eleves)
         ]);
     }
-
 
     public function elevesEcoleByGtin(Request $request)
     {
@@ -98,11 +103,6 @@ class EtudiantController extends Controller
     }
 
 
-
-
-
-
-
     public function uploadImage(Request $request, $photoKey)
     {
         if ($request->has($photoKey) && !empty($request->$photoKey)) {
@@ -121,10 +121,15 @@ class EtudiantController extends Controller
     public function modifier(Request $request)
     {
 
+        if ($request->user()->cannot('update', Etudiant::class)) {
+            return response()->json([
+                "message" => "Tu n'est pas autorisé à modifier  quoi que ce soit",
+                "code" => 404
+            ]);
+        }
+
         $filiere = Filiere::where('libelle', $request->filiere)->first();
         $niveau = Niveau::where('libelle', $request->niveau)->first();
-
-
 
         $image_64 = $request->photo;
         $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
@@ -166,15 +171,6 @@ class EtudiantController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
-
     public function detDepartment(Request $request)
     {
         $query = $request->input('query');
@@ -182,20 +178,48 @@ class EtudiantController extends Controller
         return response()->json($suggestions);
     }
 
+    public function detFiliere(Request $request)
+    {
+        $query = $request->input('query');
+        $suggestions = Filiere::where('libelle', 'like', '%' . $query . '%')->pluck('libelle');
+        return response()->json($suggestions);
+    }
+
+
+    public function detNiveau(Request $request)
+    {
+        $query = $request->input('query');
+        $suggestions = Niveau::where('libelle', 'like', '%' . $query . '%')->pluck('libelle');
+        return response()->json($suggestions);
+    }
 
 
     public function existDepartement($libelle)
     {
         return Departement::where('libelle', $libelle)->first();
     }
+    public function existFiliere($libelle)
+    {
+        return Filiere::where('libelle', $libelle)->first();
+    }
 
-
+    public function existNiveau($libelle)
+    {
+        return Niveau::where('libelle', $libelle)->first();
+    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(EtudiantRequest $request)
     {
+        if ($request->user()->cannot('create', Etudiant::class)) {
+            return response()->json([
+                "message" => "Tu n'est pas autorisé à ajouter ",
+                "code" => 404
+            ]);
+        }
+
         DB::beginTransaction();
         try {
             $image_64 = $request->photo;
@@ -206,7 +230,6 @@ class EtudiantController extends Controller
             $imageName = time() . '.' . $extension;
             Storage::disk('public')->put($imageName, base64_decode($image));
 
-
             $image64 = $request->photo_diplome;
             $extension1 = explode('/', explode(':', substr($image64, 0, strpos($image64, ';')))[1])[1];
             $replace1 = substr($image64, 0, strpos($image64, ',') + 1);
@@ -215,19 +238,35 @@ class EtudiantController extends Controller
             $imageName1 = 'diplome' . time() . '.' . $extension1;
             Storage::disk('public')->put($imageName1, base64_decode($image1));
 
-            if (!$this->existDepartement($request->departement)) {
+            if (!$this->existDepartement(ucfirst($request->departement))) {
                 Departement::create([
                     'libelle' => ucfirst($request->departement),
                 ]);
             }
+
+            if (!$this->existFiliere(ucfirst($request->filiere))) {
+                Filiere::create([
+                    'libelle' => ucfirst($request->filiere),
+                ]);
+            }
+
+            if (!$this->existNiveau(ucfirst($request->niveau))) {
+                Niveau::create([
+                    'libelle' => ucfirst($request->niveau),
+                ]);
+            }
+
+            $filiere = Filiere::where('libelle', $request->filiere)->First();
+            $niveau = Niveau::where('libelle', $request->niveau)->First();
+
             $student =  Etudiant::create([
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'civilite' => $request->civilite,
                 'departement' => $request->departement,
-                'filiere_id' => $request->filiere_id,
+                'filiere_id' => $filiere->id,
                 'numero_gtin' => $request->numero_gtin,
-                'niveau_id' => $request->niveau_id,
+                'niveau_id' => $niveau->id,
                 'matricule' => $request->matricule,
                 'date_obtention' => $request->date_obtention,
                 //'id_system' => $request->id_system,
@@ -245,25 +284,6 @@ class EtudiantController extends Controller
             throw new Error($th->getMessage());
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -291,9 +311,14 @@ class EtudiantController extends Controller
         dd($id);
     }
 
-    public function supprimer($id)
+    public function supprimer(Request $request, $id)
     {
-
+        if ($request->user()->cannot('delete', Etudiant::class)) {
+            return response()->json([
+                "message" => "Tu n'est pas autorisé à supprimer",
+                "code" => 404
+            ]);
+        }
         try {
             DB::beginTransaction();
             $etudiant = Etudiant::findOrFail($id);

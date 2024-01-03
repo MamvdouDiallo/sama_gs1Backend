@@ -16,10 +16,12 @@ class EtudiantPolicy
         return in_array($user->role->libelle, ["Admin","Responsable pédagogique"]);
     }
 
+
+
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Etudiant $etudiant): bool
+    public function view(User $user): bool
     {
         return $user->role->libelle == "Admin";
     }
@@ -29,13 +31,20 @@ class EtudiantPolicy
      */
     public function create(User $user): bool
     {
-    return in_array($user->role->libelle, ["Admin","Responsable pédagogique"]);
+        return in_array($user->role->libelle, ["Admin", "Responsable pédagogique"]);
+    }
+
+
+
+    public function viewEtudiantByEcole(User $user): bool
+    {
+        return in_array($user->role->libelle, ["Admin", "Responsable pédagogique"]);
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Etudiant $etudiant): bool
+    public function update(User $user): bool
     {
         return $user->role->libelle == "Admin";
     }
@@ -43,7 +52,7 @@ class EtudiantPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Etudiant $etudiant): bool
+    public function delete(User $user): bool
     {
         return $user->role->libelle == "Admin";
     }
@@ -51,7 +60,7 @@ class EtudiantPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Etudiant $etudiant): bool
+    public function restore(User $user): bool
     {
         return $user->role->libelle == "Admin";
     }
@@ -59,7 +68,7 @@ class EtudiantPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Etudiant $etudiant): bool
+    public function forceDelete(User $user): bool
     {
         return $user->role->libelle == "Admin";
     }
