@@ -83,24 +83,36 @@ class EtudiantController extends Controller
         }
     }
 
-
-
-    public function IsExistGtin(Request $request)
+    public function existDepartement($libelle)
     {
-        try {
-            $gtin = Etudiant::where('numero_gtin', $request->numero_gtin)->firstOrFail();
-            return response()->json([
-                "code" => 200,
-                "message" => "Ce numero est déjà attribué a un étudiant",
-                "data" => $gtin
-            ]);
-        } catch (ModelNotFoundException $th) {
-            return response()->json([
-                "code" => 400,
-                'message' => 'Aucun élève trouvé avec ce numéro GTIN',
-            ]);
-        }
+        return Departement::where('libelle', $libelle)->first();
     }
+    public function existFiliere($libelle)
+    {
+        return Filiere::where('libelle', $libelle)->first();
+    }
+
+    public function existNiveau($libelle)
+    {
+        return Niveau::where('libelle', $libelle)->first();
+    }
+
+    // public function IsExistGtin(Request $request)
+    // {
+    //     try {
+    //         $gtin = Etudiant::where('numero_gtin', $request->numero_gtin)->firstOrFail();
+    //         return response()->json([
+    //             "code" => 200,
+    //             "message" => "Ce numero est déjà attribué a un étudiant",
+    //             "data" => $gtin
+    //         ]);
+    //     } catch (ModelNotFoundException $th) {
+    //         return response()->json([
+    //             "code" => 400,
+    //             'message' => 'Aucun élève trouvé avec ce numéro GTIN',
+    //         ]);
+    //     }
+    // }
 
 
     public function uploadImage(Request $request, $photoKey)
@@ -128,9 +140,6 @@ class EtudiantController extends Controller
             ]);
         }
 
-        $filiere = Filiere::where('libelle', $request->filiere)->first();
-        $niveau = Niveau::where('libelle', $request->niveau)->first();
-
         $image_64 = $request->photo;
         $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
         $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
@@ -148,6 +157,26 @@ class EtudiantController extends Controller
         $imageName1 = 'diplome' . time() . '.' . $extension1;
         Storage::disk('public')->put($imageName1, base64_decode($image1));
 
+        if (!$this->existDepartement(ucfirst($request->departement))) {
+            Departement::create([
+                'libelle' => ucfirst($request->departement),
+            ]);
+        }
+
+        if (!$this->existFiliere(ucfirst($request->filiere))) {
+            Filiere::create([
+                'libelle' => ucfirst($request->filiere),
+            ]);
+        }
+
+        if (!$this->existNiveau(ucfirst($request->niveau))) {
+            Niveau::create([
+                'libelle' => ucfirst($request->niveau),
+            ]);
+        }
+
+        $filiere = Filiere::where('libelle', $request->filiere)->First();
+        $niveau = Niveau::where('libelle', $request->niveau)->First();
 
         Etudiant::where('id', $request->id)->update([
             'nom' => $request->nom,
@@ -158,6 +187,7 @@ class EtudiantController extends Controller
             'matricule' => $request->matricule,
             'date_obtention' => $request->date_obtention,
             'filiere_id' => $filiere->id,
+            'departement' => $request->departement,
             'photo' => $imageName,
             'photo_diplome' => $imageName1,
             'date_obtention' => $request->date_obtention
@@ -194,19 +224,7 @@ class EtudiantController extends Controller
     }
 
 
-    public function existDepartement($libelle)
-    {
-        return Departement::where('libelle', $libelle)->first();
-    }
-    public function existFiliere($libelle)
-    {
-        return Filiere::where('libelle', $libelle)->first();
-    }
 
-    public function existNiveau($libelle)
-    {
-        return Niveau::where('libelle', $libelle)->first();
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -269,7 +287,6 @@ class EtudiantController extends Controller
                 'niveau_id' => $niveau->id,
                 'matricule' => $request->matricule,
                 'date_obtention' => $request->date_obtention,
-                //'id_system' => $request->id_system,
                 'photo' => $imageName,
                 'photo_diplome' => $imageName1
             ]);
