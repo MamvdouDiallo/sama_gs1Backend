@@ -43,6 +43,9 @@ Route::get('suggestionFilieres', [EtudiantController::class, 'detFiliere']);
 Route::get('suggestionNiveaux', [EtudiantController::class, 'detNiveau']);
 
 
+Route::get('suggestionTypeEcoles', [EcoleController::class, 'existTypeEcole']);
+
+
 Route::post('users/modifier', [UserController::class, 'modifier']);
 Route::post('ecoles/modifier', [UserController::class, 'modifierEcole']);
 Route::apiResource('roles', RoleController::class);

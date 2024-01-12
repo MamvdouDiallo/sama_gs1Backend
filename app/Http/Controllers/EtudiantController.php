@@ -295,7 +295,7 @@ class EtudiantController extends Controller
                 'etudiant_id' => $student->id
             ]);
             DB::commit();
-            return $this->success(200, 'created succesfully', $student);
+            return $this->success(200, 'étudiant crée avec succéss', $student);
         } catch (\Exception $th) {
             DB::rollback();
             throw new Error($th->getMessage());
