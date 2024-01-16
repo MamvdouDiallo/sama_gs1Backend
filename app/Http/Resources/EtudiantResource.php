@@ -44,7 +44,8 @@ class EtudiantResource extends JsonResource
             "niveau" => Niveau::find($this->etudiant->niveau_id)->libelle,
             "matricule" => $this->etudiant->matricule,
             "date_obtention" => $date->format("Y-m-d"),
-            "numero_gtin" => $this->etudiant->numero_gtin
+            "numero_gtin" => $this->etudiant->numero_gtin,
+            "etat" => $this->etudiant->etat,
         ];
     }
 }

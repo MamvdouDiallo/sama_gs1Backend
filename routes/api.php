@@ -70,6 +70,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
     Route::post('etudiants/ecole/etudiantsByGTIN', [EtudiantController::class, 'elevesEcoleByGtin']);
     Route::post('etudiants/update', [EtudiantController::class, 'modifier']);
+    Route::post('etudiants/valider', [EtudiantController::class, 'valider']);
     Route::post('users/logout', [AuthController::class, 'logout']);
     Route::delete('etudiants/supprimer/{id}', [EtudiantController::class, 'supprimer']);
 });

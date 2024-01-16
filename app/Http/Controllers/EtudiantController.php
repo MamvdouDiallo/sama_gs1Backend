@@ -66,7 +66,7 @@ class EtudiantController extends Controller
         try {
             $eleve = EtudiantEcole::where('ecole_id', $id)
                 ->whereHas('etudiant', function ($query) use ($gtin) {
-                    $query->where('numero_gtin', $gtin);
+                    $query->where(['numero_gtin' => $gtin, 'etat' => 'valide']);
                 })
                 ->with('etudiant')
                 ->firstOrFail();
@@ -223,6 +223,20 @@ class EtudiantController extends Controller
         return response()->json($suggestions);
     }
 
+    public function valider(Request $request)
+    {
+
+
+        Etudiant::where('id', $request->id)->update([
+            'etat' => "valide",
+        ]);
+        $user1 = EtudiantEcole::where('etudiant_id', $request->id)->with('etudiant')->first();
+        return response()->json([
+            'message' => 'étudiant validé avec succès',
+            'code' => 200,
+            'data' => new EtudiantResource($user1)
+        ], Response::HTTP_OK);
+    }
 
 
 
@@ -273,10 +287,9 @@ class EtudiantController extends Controller
                     'libelle' => ucfirst($request->niveau),
                 ]);
             }
-
+            $etat = ($request->role_user != "Admin") ? "enAttente" : "valide";
             $filiere = Filiere::where('libelle', $request->filiere)->First();
             $niveau = Niveau::where('libelle', $request->niveau)->First();
-
             $student =  Etudiant::create([
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
@@ -288,6 +301,7 @@ class EtudiantController extends Controller
                 'matricule' => $request->matricule,
                 'date_obtention' => $request->date_obtention,
                 'photo' => $imageName,
+                'etat' => $etat,
                 'photo_diplome' => $imageName1
             ]);
             EtudiantEcole::create([

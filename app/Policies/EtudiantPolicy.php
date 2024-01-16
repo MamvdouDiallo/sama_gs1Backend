@@ -13,7 +13,7 @@ class EtudiantPolicy
      */
     public function viewAny(User $user): bool
     {
-        return in_array($user->role->libelle, ["Admin","Responsable pédagogique"]);
+        return in_array($user->role->libelle, ["Admin","Responsable pédagogique","Super admin"]);
     }
 
 
@@ -34,11 +34,9 @@ class EtudiantPolicy
         return in_array($user->role->libelle, ["Admin", "Responsable pédagogique"]);
     }
 
-
-
     public function viewEtudiantByEcole(User $user): bool
     {
-        return in_array($user->role->libelle, ["Admin", "Responsable pédagogique"]);
+        return in_array($user->role->libelle, ["Admin", "Responsable pédagogique","Super admin"]);
     }
 
     /**
