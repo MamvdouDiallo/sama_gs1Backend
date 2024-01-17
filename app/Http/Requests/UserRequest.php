@@ -34,7 +34,7 @@ class UserRequest extends FormRequest
             "adresse" => 'required|string',
             "civilite" => 'required|string|min:2',
             "password" => 'required|string',
-            "role_id" => 'required|integer|exists:roles,id',
+            "role_id" => 'required|string',
             "ecole_id" => 'required|integer|exists:ecoles,id'
         ];
     }

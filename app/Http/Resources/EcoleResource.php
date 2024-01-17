@@ -43,6 +43,7 @@ class EcoleResource extends JsonResource
             'libelle' => $this->libelle,
             'date_creation' => $this->date_creation,
             'adresse' => $this->adresse,
+            'type_ecole' => $this->type_ecole,
             "logo" => $this->getImage($this->logo),
             "numero_bureau" => $this->numero_bureau,
             "numero_autorisation" => $this->getPdf($this->numero_autorisation),

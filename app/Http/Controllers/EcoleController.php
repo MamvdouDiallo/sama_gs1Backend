@@ -7,6 +7,7 @@ use App\Http\Resources\EcoleResource;
 use App\Models\Ecole;
 use App\Traits\HttpResp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class EcoleController extends Controller
@@ -88,6 +89,28 @@ class EcoleController extends Controller
         return $this->success(200, "Ecole crée avec succés", $ecole);
     }
 
+    public function modifierEcole(Request $request)
+    {
+        Ecole::where('id', $request->id)->update([
+            'libelle' => $request->libelle,
+            'date_creation' => $request->date_creation,
+            'adresse' => $request->adresse,
+            'numero_personnel' => $request->telephone_personnel,
+            'numero_bureau' => $request->telephone_bureau,
+            'logo' => $this->uploadImage($request),
+            "email" => $request->email,
+            "type_ecole" => $request->type_ecole,
+            "numero_autorisation" => $this->uploadImage1($request, 'numero_autorisation'),
+        ]);
+        $ecole = Ecole::find($request->id);
+        return response()->json([
+            'message' => ' école modifié avec succès',
+            'code' => 200,
+            'data' => new EcoleResource($ecole)
+        ]);
+    }
+
+
     /**
      * Display the specified resource.
      */
@@ -110,5 +133,21 @@ class EcoleController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function supprimer($id)
+    {
+
+        try {
+            DB::beginTransaction();
+            $ecole = Ecole::findOrFail($id);
+            $ecole->delete();
+            DB::commit();
+            return response()->json(['code' => 200, 'message' => 'Etudiant supprimé avec succes', 'data' => []]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['code' => '404', 'error' => 'Erreur '
+                . $e->getMessage(), 'data' => $e->getMessage()]);
+        }
     }
 }

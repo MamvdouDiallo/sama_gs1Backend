@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Ecole;
+use App\Models\Role;
 use App\Models\User;
 use App\Traits\HttpResp;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -23,13 +25,36 @@ class UserController extends Controller
         return $this->success(200, "liste des users", UserResource::collection(User::all()));
     }
 
+
+
+    public function getUsersByEcole($ecole_id)
+    {
+
+        $users = User::where('ecole_id', $ecole_id)->get();
+        return $this->success(200, "liste des users", UserResource::collection($users));
+    }
+
+
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(UserRequest $request)
     {
-        $user = User::create($request->all());
-        return $this->success(200, "user crée avec succés",  $user);
+        $role = Role::where('libelle', $request->role_id)->first();
+        $user = User::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'civilite' => $request->civilite,
+            "email" => $request->email,
+            'telephone' => $request->telephone,
+            'adresse' => $request->adresse,
+            'photo' => $this->uploadImage($request),
+            "password" => $request->password,
+            "ecole_id" => $request->ecole_id,
+            "role_id" => $role->id
+        ]);
+        return $this->success(200, "user crée avec succés", new UserResource($user));
     }
 
 
@@ -104,6 +129,28 @@ class UserController extends Controller
             'data' => new UserResource($user1)
         ], Response::HTTP_OK);
     }
+    public function modifierUser(Request $request)
+    {
+        $role = Role::where('libelle', $request->role_id)->first();
+        User::where('id', $request->id)->update([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'civilite' => $request->civilite,
+            "email" => $request->email,
+            'telephone' => $request->telephone,
+            'adresse' => $request->adresse,
+            'photo' => $this->uploadImage($request),
+            'role_id' => $role->id,
+            'password' => $request->password
+        ]);
+
+        $user1 = User::where('id', $request->id)->first();
+        return response()->json([
+            'message' => 'modifié avec succès',
+            'code' => 200,
+            'data' => new UserResource($user1)
+        ], Response::HTTP_OK);
+    }
 
 
     public function modifierEcole(Request $request)
@@ -136,5 +183,20 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function supprimer($id)
+    {
+        try {
+            DB::beginTransaction();
+            $user = User::findOrFail($id);
+            $user->delete();
+            DB::commit();
+            return response()->json(['code' => 200, 'message' => 'Etudiant supprimé avec succes', 'data' => []]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['code' => '404', 'error' => 'Erreur '
+                . $e->getMessage(), 'data' => $e->getMessage()]);
+        }
     }
 }

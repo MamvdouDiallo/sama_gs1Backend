@@ -51,6 +51,11 @@ Route::post('ecoles/modifier', [UserController::class, 'modifierEcole']);
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('ecoles', EcoleController::class);
 Route::apiResource('users', UserController::class);
+Route::get('users/usersByEcole/{ecole_id}', [UserController::class, 'getUsersByEcole']);
+Route::post('users/modifierUser', [UserController::class, 'modifierUser']);
+Route::post('ecoles/modifierEcole', [EcoleController::class, 'modifierEcole']);
+Route::delete('users/supprimer/{id}', [UserController::class, 'supprimer']);
+Route::delete('ecoles/supprimer/{id}', [EcoleController::class, 'supprimer']);
 Route::apiResource('niveaux', NiveauController::class);
 Route::apiResource('filieres', FiliereController::class);
 
