@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(Role::class)->constrained()->onDelete('cascade');
             $table->string('prenom');
             $table->string('photo')->nullable();
-            $table->string('telephone')->nullable(false)->unique();
+            $table->string('telephone')->nullable(false);
         });
     }
 

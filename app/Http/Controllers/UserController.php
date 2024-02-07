@@ -8,9 +8,11 @@ use App\Models\Ecole;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\HttpResp;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -141,7 +143,7 @@ class UserController extends Controller
             'adresse' => $request->adresse,
             'photo' => $this->uploadImage($request),
             'role_id' => $role->id,
-            'password' => $request->password
+            'password' => Hash::make($request->password)
         ]);
 
         $user1 = User::where('id', $request->id)->first();
@@ -197,6 +199,22 @@ class UserController extends Controller
             DB::rollBack();
             return response()->json(['code' => '404', 'error' => 'Erreur '
                 . $e->getMessage(), 'data' => $e->getMessage()]);
+        }
+    }
+    public function checkEmail(Request $request)
+    {
+        try {
+            User::where('email', $request->email)->firstOrFail();
+            return response()->json([
+                "code" => 200,
+                'message' => 'Cet adresse mail est déja utilisé',
+
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "code" => 400,
+                'message' => 'adresse email valide',
+            ]);
         }
     }
 }

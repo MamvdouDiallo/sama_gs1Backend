@@ -27,7 +27,7 @@ class EtudiantRequest extends FormRequest
             "departement" => "required|string|min:1",
             "ecole_id" => "required|integer|exists:ecoles,id",
             "photo" => "required|string",
-            "numero_gtin" => "required|string|min:8|unique:etudiants",
+            "numero_gtin" => "required|string|min:8",
             "date_obtention" => "required",
             "matricule" => "required|string|min:2",
             "niveau" => "required",

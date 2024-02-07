@@ -30,7 +30,6 @@ class StudentRequest extends FormRequest
             "num_gtin" => "required|string",
             "id_system" => "required|string",
             "civilite" => "required|string",
-
         ];
     }
 }

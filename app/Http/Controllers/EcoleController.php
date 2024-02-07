@@ -6,6 +6,7 @@ use App\Http\Requests\EcoleRequest;
 use App\Http\Resources\EcoleResource;
 use App\Models\Ecole;
 use App\Traits\HttpResp;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -143,11 +144,46 @@ class EcoleController extends Controller
             $ecole = Ecole::findOrFail($id);
             $ecole->delete();
             DB::commit();
-            return response()->json(['code' => 200, 'message' => 'Etudiant supprimé avec succes', 'data' => []]);
+            return response()->json(['code' => 200, 'message' => 'Ecole supprimé avec succes', 'data' => []]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['code' => '404', 'error' => 'Erreur '
                 . $e->getMessage(), 'data' => $e->getMessage()]);
+        }
+    }
+
+    public function checkEmail(Request $request)
+    {
+        try {
+            Ecole::where('email', $request->email)->firstOrFail();
+            return response()->json([
+                "code" => 200,
+                'message' => 'cet adresse mail est déja utilisé',
+
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "code" => 400,
+                'message' => 'adresse email valide',
+            ]);
+        }
+    }
+    public function checkEmailUpdate(Request $request)
+    {
+        try {
+            Ecole::where('email', $request->email)
+                ->where('id', '!=', $request->id)
+                ->firstOrFail();
+
+            return response()->json([
+                "code" => 200,
+                'message' => 'Cet adresse mail est déjà utilisé',
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                "code" => 400,
+                'message' => 'Adresse email valide',
+            ]);
         }
     }
 }
