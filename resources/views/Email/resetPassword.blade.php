@@ -14,7 +14,7 @@
 <body class="antialiased">
     @component('mail::message')
     Réinitialiser ou changer votre mot de passe.
-    @component('mail::button', ['url' => 'http://localhost:4200/enter_password?token='.$token])
+    @component('mail::button', ['url' => 'https://samags1.org/enter_password?token='.$token])
     Cliquez sur le lien pour changer votre votre mot de passe
     @endcomponent
     MERCI,<br>
