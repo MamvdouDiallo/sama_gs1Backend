@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
 
 class EcoleController extends Controller
 {
@@ -41,7 +42,8 @@ class EcoleController extends Controller
             $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
             $image = str_replace($replace, '', $image_64);
             $image = str_replace(' ', '+', $image);
-            $imageName = time() . '.' . $extension;
+            $uuid = Uuid::uuid4();
+            $imageName = $uuid->toString() . '.' . $extension;
             Storage::disk('public')->put($imageName, base64_decode($image));
             return $imageName;
         } else {
@@ -57,7 +59,8 @@ class EcoleController extends Controller
             $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
             $image = str_replace($replace, '', $image_64);
             $image = str_replace(' ', '+', $image);
-            $imageName = time() . '.' . $extension;
+           $uuid = Uuid::uuid4();
+           $imageName = $uuid->toString() . '.' . $extension;
             Storage::disk('public')->put($imageName, base64_decode($image));
             return $imageName;
         } else {
