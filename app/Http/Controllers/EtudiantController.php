@@ -261,7 +261,7 @@ class EtudiantController extends Controller
             $image = str_replace(' ', '+', $image);
             $imageName = time() . '.' . $extension;
             Storage::disk('public')->put($imageName, base64_decode($image));
-
+            
             $image64 = $request->photo_diplome;
             $extension1 = explode('/', explode(':', substr($image64, 0, strpos($image64, ';')))[1])[1];
             $replace1 = substr($image64, 0, strpos($image64, ',') + 1);
