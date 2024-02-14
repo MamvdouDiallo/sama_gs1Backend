@@ -15,7 +15,7 @@ class AuthController extends Controller
 
         if (!Auth::attempt($request->only("email", "password"))) {
             return response([
-                "message" => "Invalid credentials"
+                "message" => "Email ou mot de passe incorrect"
             ],);
         }
         $user = Auth::user();
@@ -33,7 +33,7 @@ class AuthController extends Controller
             $request->user()->currentAccessToken()->delete();
         }
         return response()->json([
-            'message' => 'You have been logged out'
+            'message' => 'Déconnecté avec succés'
         ]);
     }
 }

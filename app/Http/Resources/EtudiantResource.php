@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\Ecole;
 use App\Models\Filiere;
 use App\Models\Niveau;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -43,9 +44,12 @@ class EtudiantResource extends JsonResource
             "filiere" =>   Filiere::find($this->etudiant->filiere_id)->libelle,
             "niveau" => Niveau::find($this->etudiant->niveau_id)->libelle,
             "matricule" => $this->etudiant->matricule,
-            "date_obtention" => $date->format("Y-m-d"),
+           // "date_obtention" => $date->format("Y-m-d"),
+           "date_obtention" =>Carbon::parse($this->etudiant->date_obtention)->format("Y-m-d"),
             "numero_gtin" => $this->etudiant->numero_gtin,
             "etat" => $this->etudiant->etat,
+            "date_de_naissance" =>Carbon::parse($this->etudiant->date_de_naissance)->format("Y-m-d"),
+            "lieu_de_naissance"=>$this->etudiant->lieu_de_naissance,
         ];
     }
 }

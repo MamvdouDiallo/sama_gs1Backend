@@ -24,7 +24,7 @@ class PasswordResetRequestController extends Controller
         } else {
             $this->sendMail($request->email);
             return response()->json([
-                'message' => 'Vérifie ton email, nous vous avons envoyé un lien pour réinitialiser votre mot de passe',
+                'message' => 'Vérifie ton émail, nous vous avons envoyé un lien pour réinitialiser votre mot de passe',
                 'code' => 200
             ], Response::HTTP_OK);
         }

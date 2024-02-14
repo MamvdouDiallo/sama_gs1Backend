@@ -32,38 +32,7 @@ Route::get('niveaux/ecole/{id}', [NiveauController::class, 'niveauByEcole']);
 //Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
 
 
-Route::post('ecole/isExist', [EtudiantController::class, 'IsExistGtin']);
-
-Route::get('filieres/ecole/{id}', [FiliereController::class, 'filiereByEcole']);
-
-Route::get('suggestions', [EtudiantController::class, 'detDepartment']);
-
-Route::get('suggestionFilieres', [EtudiantController::class, 'detFiliere']);
-
-Route::get('suggestionNiveaux', [EtudiantController::class, 'detNiveau']);
-
-
-Route::get('suggestionTypeEcoles', [EcoleController::class, 'existTypeEcole']);
-
-
-Route::post('users/modifier', [UserController::class, 'modifier']);
-Route::post('ecoles/modifier', [UserController::class, 'modifierEcole']);
-Route::apiResource('roles', RoleController::class);
-Route::apiResource('ecoles', EcoleController::class);
-Route::apiResource('users', UserController::class);
-Route::get('users/usersByEcole/{ecole_id}', [UserController::class, 'getUsersByEcole']);
-Route::post('users/modifierUser', [UserController::class, 'modifierUser']);
-Route::post('ecoles/modifierEcole', [EcoleController::class, 'modifierEcole']);
-Route::post('ecoles/checkEmail', [EcoleController::class, 'checkEmail']);
-Route::post('ecoles/checkEmailUpdate', [EcoleController::class, 'checkEmailUpdate']);
-Route::post('user/checkEmail', [UserController::class, 'checkEmail']);
-Route::delete('users/supprimer/{id}', [UserController::class, 'supprimer']);
-Route::delete('ecoles/supprimer/{id}', [EcoleController::class, 'supprimer']);
-Route::apiResource('niveaux', NiveauController::class);
-Route::apiResource('filieres', FiliereController::class);
-
 Route::post('users/login', [AuthController::class, 'login']);
-
 Route::post('reset_password_request', [PasswordResetRequestController::class, 'sendPasswordResetEmail']);
 Route::post('change_password', [ChangePasswordController::class, 'passwordReset']);
 
@@ -72,8 +41,43 @@ Route::post('change_password', [ChangePasswordController::class, 'passwordReset'
 //     Route::apiResource('etudiants', EtudiantController::class);
 // });
 
-
+//   Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
+    Route::post('users/modifier', [UserController::class, 'modifier']);
+    Route::post('ecoles/modifier', [UserController::class, 'modifierEcole']);
+    Route::apiResource('roles', RoleController::class);
+    Route::apiResource('ecoles', EcoleController::class);
+    Route::apiResource('users', UserController::class);
+    Route::get('users/usersByEcole/{ecole_id}', [UserController::class, 'getUsersByEcole']);
+    Route::post('users/modifierUser', [UserController::class, 'modifierUser']);
+    Route::post('ecoles/modifierEcole', [EcoleController::class, 'modifierEcole']);
+    Route::post('ecoles/checkEmail', [EcoleController::class, 'checkEmail']);
+    Route::post('ecoles/checkEmailUpdate', [EcoleController::class, 'checkEmailUpdate']);
+    Route::post('user/checkEmail', [UserController::class, 'checkEmail']);
+    Route::delete('users/supprimer/{id}', [UserController::class, 'supprimer']);
+    Route::delete('ecoles/supprimer/{id}', [EcoleController::class, 'supprimer']);
+    Route::apiResource('niveaux', NiveauController::class);
+    Route::apiResource('filieres', FiliereController::class);
+
+
+
+
+
+
+
+
+
+
+
+    Route::post('ecole/isExist', [EtudiantController::class, 'IsExistGtin']);
+    Route::get('filieres/ecole/{id}', [FiliereController::class, 'filiereByEcole']);
+    Route::get('suggestions', [EtudiantController::class, 'detDepartment']);
+    Route::get('suggestionFilieres', [EtudiantController::class, 'detFiliere']);
+    Route::get('suggestionNiveaux', [EtudiantController::class, 'detNiveau']);
+    Route::get('suggestionTypeEcoles', [EcoleController::class, 'existTypeEcole']);
+
+
     Route::apiResource('etudiants', EtudiantController::class);
     Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
     Route::post('etudiants/ecole/etudiantsByGTIN', [EtudiantController::class, 'elevesEcoleByGtin']);

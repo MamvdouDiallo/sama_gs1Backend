@@ -32,7 +32,9 @@ class EtudiantRequest extends FormRequest
             "matricule" => "required|string|min:2",
             "niveau" => "required",
             "filiere" => "required",
-            "photo_diplome" => "required|string"
+            "photo_diplome" => "required|string",
+            'date_de_naissance' => 'required',
+            'lieu_de_naissance'=>'required|string',
         ];
     }
 }

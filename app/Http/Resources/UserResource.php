@@ -23,6 +23,9 @@ class UserResource extends JsonResource
         $base64 = base64_encode($fileContents);
         return "data:image/png;base64," . $base64;
     }
+
+
+    
     public function toArray(Request $request): array
     {
         return [

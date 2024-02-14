@@ -44,12 +44,12 @@ class EtudiantController extends Controller
 
     public function elevesByEcole(Request $request, $id)
     {
-        if ($request->user()->cannot('viewEtudiantByEcole', Etudiant::class)) {
-            return response()->json([
-                "message" => "Tu n'est pas autorisé à voir cette liste",
-                "code" => 404
-            ]);
-        }
+        // if ($request->user()->cannot('viewEtudiantByEcole', Etudiant::class)) {
+        //     return response()->json([
+        //         "message" => "Tu n'es pas autorisé à voir cette liste",
+        //         "code" => 404
+        //     ]);
+        // }
         $eleves = EtudiantEcole::where('ecole_id', $id)->with('etudiant')->get();
         return response()->json([
             "code" => 200,
@@ -194,7 +194,7 @@ class EtudiantController extends Controller
         ]);
         $user1 = EtudiantEcole::where('etudiant_id', $request->id)->with('etudiant')->first();
         return response()->json([
-            'message' => 'modifié avec succès',
+            'message' => 'étudiant modifié avec succès',
             'code' => 200,
             'data' => new EtudiantResource($user1)
         ], Response::HTTP_OK);
@@ -247,7 +247,7 @@ class EtudiantController extends Controller
     {
         if ($request->user()->cannot('create', Etudiant::class)) {
             return response()->json([
-                "message" => "Tu n'est pas autorisé à ajouter ",
+                "message" => "Tu n'es pas autorisé à ajouter ",
                 "code" => 404
             ]);
         }
@@ -294,6 +294,8 @@ class EtudiantController extends Controller
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'civilite' => $request->civilite,
+                'date_de_naissance' => $request->date_de_naissance,
+                'lieu_de_naissance' => $request->lieu_de_naissance,
                 'departement' => $request->departement,
                 'filiere_id' => $filiere->id,
                 'numero_gtin' => $request->numero_gtin,
@@ -309,7 +311,7 @@ class EtudiantController extends Controller
                 'etudiant_id' => $student->id
             ]);
             DB::commit();
-            return $this->success(200, 'étudiant crée avec succéss', $student);
+            return $this->success(200, 'Etudiant créé avec succés', $student);
         } catch (\Exception $th) {
             DB::rollback();
             throw new Error($th->getMessage());
