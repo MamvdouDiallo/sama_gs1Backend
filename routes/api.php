@@ -9,6 +9,7 @@ use App\Http\Controllers\NiveauController;
 use App\Http\Controllers\PasswordResetRequestController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\UserController;
 use App\Models\Etudiant;
 use Illuminate\Http\Request;
@@ -42,6 +43,9 @@ Route::post('change_password', [ChangePasswordController::class, 'passwordReset'
 // });
 
 //   Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
+
+Route::get('trackUser', [TrackingController::class, 'getAlltracks']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('users/modifier', [UserController::class, 'modifier']);
@@ -76,13 +80,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('suggestionFilieres', [EtudiantController::class, 'detFiliere']);
     Route::get('suggestionNiveaux', [EtudiantController::class, 'detNiveau']);
     Route::get('suggestionTypeEcoles', [EcoleController::class, 'existTypeEcole']);
-
-
     Route::apiResource('etudiants', EtudiantController::class);
     Route::get('etudiants/ecole/{id}', [EtudiantController::class, 'elevesByEcole']);
-    Route::post('etudiants/ecole/etudiantsByGTIN', [EtudiantController::class, 'elevesEcoleByGtin']);
     Route::post('etudiants/update', [EtudiantController::class, 'modifier']);
     Route::post('etudiants/valider', [EtudiantController::class, 'valider']);
     Route::post('users/logout', [AuthController::class, 'logout']);
     Route::delete('etudiants/supprimer/{id}', [EtudiantController::class, 'supprimer']);
+    Route::post('etudiants/ecole/etudiantsByGTIN', [EtudiantController::class, 'elevesEcoleByGtin']);
 });

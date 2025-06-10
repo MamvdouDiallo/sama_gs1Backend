@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityLog;
 use App\Http\Resources\UserResource;
 use App\Traits\HttpResp;
 use Illuminate\Http\Request;
@@ -9,7 +10,14 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+
     use HttpResp;
+    protected $activityLogService;
+    public function __construct(ActivityLog $activityLog)
+    {
+        $this->activityLogService = $activityLog;
+    }
     public function login(Request $request)
     {
 
@@ -19,6 +27,7 @@ class AuthController extends Controller
             ],);
         }
         $user = Auth::user();
+        $this->activityLogService->createLog("l'utilisateur s'est connecté", Auth::user());
         $token = $user->createToken("token")->plainTextToken;
         $data = [
             "user" =>  new UserResource($user),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ActivityLog;
 use App\Http\Requests\EtudiantRequest;
 use App\Http\Resources\EtudiantResource;
 use App\Models\Departement;
@@ -14,6 +15,7 @@ use Illuminate\Http\Response;
 use Error;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,6 +23,12 @@ class EtudiantController extends Controller
 {
 
     use HttpResp;
+    protected $activityLogService;
+
+    public function __construct(ActivityLog $activityLog)
+    {
+        $this->activityLogService = $activityLog;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -261,7 +269,7 @@ class EtudiantController extends Controller
             $image = str_replace(' ', '+', $image);
             $imageName = time() . '.' . $extension;
             Storage::disk('public')->put($imageName, base64_decode($image));
-            
+
             $image64 = $request->photo_diplome;
             $extension1 = explode('/', explode(':', substr($image64, 0, strpos($image64, ';')))[1])[1];
             $replace1 = substr($image64, 0, strpos($image64, ',') + 1);
@@ -357,6 +365,7 @@ class EtudiantController extends Controller
             $etudiant = Etudiant::findOrFail($id);
             $etudiant->ecoles()->detach();
             $etudiant->delete();
+            $this->activityLogService->createLog("l'utilisateur s'est connecté", Auth::user());
             DB::commit();
             return response()->json(['code' => 200, 'message' => 'Etudiant supprimé avec succes', 'data' => []]);
         } catch (\Exception $e) {
